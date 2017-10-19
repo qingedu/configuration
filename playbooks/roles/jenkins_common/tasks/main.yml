@@ -132,6 +132,7 @@
     - install
     - install:base
     - install:jenkins-configuration
+    - jenkins:local-dev
 
 - name: Copy init scripts into init.groovy.d
   command: 'cp {{ jenkins_common_git_home }}/jenkins-configuration/{{ jenkins_common_configuration_src_path }}/{{ item }} {{ jenkins_common_home }}/init.groovy.d/'
@@ -142,6 +143,7 @@
     - install
     - install:base
     - install:jenkins-configuration
+    - jenkins:local-dev
 
 - name: Create jenkins config sub folders
   file:
@@ -170,6 +172,17 @@
     - install:base
     - install:jenkins-configuration
 
+- name: For local dev, copy any config files other than oauth
+  template:
+    src: '{{ role_path }}/templates/config/{{ item }}.yml.j2'
+    dest: '{{ jenkins_common_config_path }}/{{ item }}.yml'
+    owner: '{{ jenkins_common_user }}'
+    group: '{{ jenkins_common_group }}'
+  with_items: '{{ jenkins_common_non_plugin_template_files }}'
+  when: '{{ item }} is not "security"'
+  tags:
+    - jenkins:local-dev
+
 - name: Update Github OAUTH settings when promoting jenkins instance to production
   template:
     src: '{{ role_path }}/templates/config/security.yml.j2'
@@ -191,6 +204,7 @@
     - install:base
     - install:plugins
     - install:jenkins-configuration
+    - jenkins:local-dev
 
 - name: Copy ec2 config files
   template:
@@ -204,6 +218,7 @@
     - install
     - install:base
     - install:jenkins-configuration
+    - jenkins:local-dev
 
 - name: Copy xml config files
   template:
@@ -217,6 +232,7 @@
     - install
     - install:base
     - install:jenkins-configuration
+    - jenkins:local-dev
 
 - name: Run plugins.gradle
   shell: './gradlew -b plugins.gradle plugins'
@@ -232,6 +248,7 @@
     - install:base
     - install:plugins
     - install:jenkins-configuration
+    - jenkins:local-dev
 
 - name: Copy secret file credentials
   copy:
@@ -243,6 +260,7 @@
     - install
     - install:base
     - install:jenkins-configuration
+    - jenkins:local-dev
 
 - name: Copy ssh key credentials
   copy:
@@ -256,6 +274,7 @@
     - install
     - install:base
     - install:jenkins-configuration
+    - jenkins:local-dev
 
 - name: Copy ec2 key
   copy:
@@ -268,6 +287,7 @@
     - install
     - install:base
     - install:jenkins-configuration
+    - jenkins:local-dev
 
 - name: Start Jenkins Service
   systemd:
