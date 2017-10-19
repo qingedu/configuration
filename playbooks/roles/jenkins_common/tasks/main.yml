@@ -247,16 +247,18 @@
     - install:jenkins-configuration
     - jenkins:local-dev
 
-- name: Delete any existing plugin files/ directories
-  file:
-    path: '{{ jenkins_common_home }}/plugins'
-    state: absent
-  with_items: '{{ jenkins_common_non_plugin_template_files }}'
+- name: Clean plugins directory
+  shell: './gradlew -b plugins.gradle plugins clean'
+  args:
+    chdir: '{{ jenkins_common_git_home }}/jenkins-configuration'
+  environment:
+    PLUGIN_OUTPUT_DIR: '{{ jenkins_common_home }}/plugins'
   become: true
   become_user: '{{ jenkins_common_user }}'
   tags:
     - install
     - install:base
+    - install:plugins
     - install:jenkins-configuration
     - jenkins:local-dev
 
