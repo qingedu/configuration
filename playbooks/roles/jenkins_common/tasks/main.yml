@@ -179,7 +179,7 @@
     owner: '{{ jenkins_common_user }}'
     group: '{{ jenkins_common_group }}'
   with_items: '{{ jenkins_common_non_plugin_template_files }}'
-  when: 'item != "security"å'
+  when: 'item != "security"'
   tags:
     - jenkins:local-dev
 
