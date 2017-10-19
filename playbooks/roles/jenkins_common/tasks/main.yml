@@ -177,7 +177,7 @@
     owner: '{{ jenkins_common_user }}'
     group: '{{ jenkins_common_group }}'
   with_items: '{{ jenkins_common_non_plugin_template_files }}'
-  when: '{{ item }} is not "security"'
+  when: '{{ item }} is not security'
   tags:
     - jenkins:local-dev
 
