@@ -172,6 +172,19 @@
     - install:base
     - install:jenkins-configuration
 
+- name: Delete any existing config files
+  file:
+    path: "{{ jenkins_common_config_path }}/{{ item }}.yml"
+    state: absent
+  with_items: '{{ jenkins_common_non_plugin_template_files }}'
+  become: true
+  become_user: '{{ jenkins_common_user }}'
+  tags:
+    - install
+    - install:base
+    - install:jenkins-configuration
+    - jenkins:local-dev
+
 - name: For local dev, copy any config files other than oauth
   template:
     src: '{{ role_path }}/templates/config/{{ item }}.yml.j2'
@@ -228,6 +241,19 @@
     group: '{{ jenkins_common_group }}'
   with_fileglob:
     - '{{ role_path }}/files/xml/*'
+  tags:
+    - install
+    - install:base
+    - install:jenkins-configuration
+    - jenkins:local-dev
+
+- name: Delete any existing plugin files/ directories
+  file:
+    path: '{{ jenkins_common_home }}/plugins'
+    state: absent
+  with_items: '{{ jenkins_common_non_plugin_template_files }}'
+  become: true
+  become_user: '{{ jenkins_common_user }}'
   tags:
     - install
     - install:base
