@@ -249,7 +249,7 @@
 
 - name: Delete plugins dir
   file:
-    path: "{{ jenkins_common_config_path }}/plugins"
+    path: "{{ jenkins_common_config_path }}/plugins/*"
     state: absent
   become: true
   become_user: 'root'
